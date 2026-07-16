@@ -1,0 +1,18 @@
+namespace: tlshd
+
+labels:
+  - includeSelectors: true
+    pairs:
+      app: tlshd
+
+resources:
+  - namespace.yaml
+  - serviceaccount.yaml
+  - scc-rolebinding.yaml
+  - daemonset.yaml
+  - storageclass.yaml
+
+configMapGenerator:
+  - name: nfs-certificates
+    files:
+      - ./files/pure.crt

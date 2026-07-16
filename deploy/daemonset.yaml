@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: tlshd
+  namespace: moc-nfs-tls
+spec:
+  selector:
+    matchLabels:
+      app: tlshd
+  template:
+    metadata:
+      labels:
+        app: tlshd
+    spec:
+      hostNetwork: true
+      serviceAccountName: tlshd
+      containers:
+        - name: tlshd
+          image: ghcr.io/larsks/tlshd:rhel9.6
+          securityContext:
+            privileged: true
+          command:
+            - /bin/bash
+            - -c
+            - |
+              shopt -s nullglob
+              for cert in /certs/*.crt; do
+                trust anchor "$cert"
+              done
+              exec tlshd -s
+          volumeMounts:
+            - name: nfs-certificates
+              mountPath: /certs
+      volumes:
+        - name: nfs-certificates
+          configMap:
+            name: nfs-certificates

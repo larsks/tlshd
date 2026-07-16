@@ -1,0 +1,14 @@
+allowVolumeExpansion: true
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: nfs-over-tls
+mountOptions:
+  - xprtsec=tls
+parameters:
+  backend: pure_file
+  pure_nfs_policy: tls-export
+  pure_nfs_server: naved-server
+provisioner: pxd.portworx.com
+reclaimPolicy: Delete
+volumeBindingMode: Immediate

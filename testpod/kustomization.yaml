@@ -1,0 +1,10 @@
+namespace: tlshd
+
+labels:
+  - includeSelectors: true
+    pairs:
+      app: nfs-test
+
+resources:
+  - pvc.yaml
+  - pod.yaml

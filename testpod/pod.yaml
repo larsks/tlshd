@@ -6,7 +6,11 @@ spec:
   containers:
     - name: test
       image: registry.access.redhat.com/ubi9/ubi-minimal:latest
-      command: ["sleep", "infinity"]
+
+      # This allows the pod to respond immediately to SIGTERM. `sleep inf`
+      # by itself ignores SIGTERM, causing kubernetes to wait for the default
+      # terminationGracePeriod (30s).
+      command: ["/bin/sh", "-c", "trap 'exit 0' TERM; sleep infinity & wait"]
       volumeMounts:
         - name: data
           mountPath: /data
